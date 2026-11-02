@@ -1,0 +1,1845 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>SentinelNet - Network Monitoring</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+
+
+        /* =====================================================
+           HEADER
+        ====================================================== */
+
+        .header {
+            height: 70px;
+
+            background: #111827;
+
+            border-bottom: 1px solid #334155;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 0 30px;
+        }
+
+
+        .logo {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            font-size: 24px;
+
+            font-weight: bold;
+
+            letter-spacing: 1px;
+        }
+
+
+        .logo-image {
+            width: 46px;
+
+            height: 46px;
+
+            object-fit: contain;
+
+            border-radius: 8px;
+        }
+
+
+        .logo span {
+            color: #38bdf8;
+        }
+
+
+        .connection {
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            font-size: 14px;
+        }
+
+
+        .status-dot {
+            width: 10px;
+
+            height: 10px;
+
+            border-radius: 50%;
+
+            background: #22c55e;
+        }
+
+
+        /* =====================================================
+           MAIN LAYOUT
+        ====================================================== */
+
+        .layout {
+            display: flex;
+
+            min-height: calc(100vh - 70px);
+        }
+
+
+        .sidebar {
+            width: 220px;
+
+            flex-shrink: 0;
+
+            background: #111827;
+
+            border-right: 1px solid #334155;
+
+            padding: 25px 15px;
+        }
+
+
+        .sidebar h3 {
+            font-size: 12px;
+
+            color: #64748b;
+
+            text-transform: uppercase;
+
+            margin: 0 10px 15px;
+
+            letter-spacing: 1px;
+        }
+
+
+        .nav-item {
+            display: block;
+
+            padding: 13px 15px;
+
+            margin-bottom: 5px;
+
+            border-radius: 7px;
+
+            color: #cbd5e1;
+
+            text-decoration: none;
+        }
+
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: #1e293b;
+
+            color: #38bdf8;
+        }
+
+
+        .main {
+            flex: 1;
+
+            padding: 30px;
+
+            overflow-y: auto;
+        }
+
+
+        /* =====================================================
+           PAGE HEADER
+        ====================================================== */
+
+        .page-title {
+            margin-bottom: 25px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+        }
+
+
+        .page-title h1 {
+            margin: 0 0 6px;
+
+            font-size: 28px;
+        }
+
+
+        .page-title p {
+            margin: 0;
+
+            color: #94a3b8;
+        }
+
+
+        .connection-status {
+            padding: 8px 14px;
+
+            background: #064e3b;
+
+            color: #6ee7b7;
+
+            border-radius: 20px;
+
+            font-size: 14px;
+
+            white-space: nowrap;
+        }
+
+
+        /* =====================================================
+           SUMMARY GRID
+        ====================================================== */
+
+        .summary-grid {
+            display: grid;
+
+            grid-template-columns: repeat(4, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .summary-card {
+            background: #1e293b;
+
+            border: 1px solid #334155;
+
+            border-radius: 10px;
+
+            padding: 20px;
+        }
+
+
+        .summary-card h3 {
+            margin: 0 0 10px;
+
+            font-size: 13px;
+
+            color: #94a3b8;
+
+            font-weight: normal;
+        }
+
+
+        .summary-value {
+            font-size: 28px;
+
+            font-weight: bold;
+        }
+
+
+        .summary-label {
+            margin-top: 6px;
+
+            font-size: 12px;
+
+            color: #64748b;
+        }
+
+
+        /* =====================================================
+           PANELS
+        ====================================================== */
+
+        .card {
+            background: #1e293b;
+
+            border: 1px solid #334155;
+
+            border-radius: 10px;
+
+            padding: 20px;
+
+            margin-bottom: 20px;
+        }
+
+
+        .card-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 20px;
+        }
+
+
+        .card-header h2 {
+            margin: 0;
+
+            font-size: 18px;
+        }
+
+
+        .count {
+            background: #1e3a8a;
+
+            padding: 7px 12px;
+
+            border-radius: 15px;
+
+            font-size: 13px;
+        }
+
+
+        /* =====================================================
+           TABLE
+        ====================================================== */
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 1000px;
+        }
+
+
+        th {
+            background: #0f172a;
+
+            color: #94a3b8;
+
+            text-align: left;
+
+            padding: 13px;
+
+            font-size: 12px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.5px;
+
+            border-bottom: 1px solid #334155;
+        }
+
+
+        td {
+            padding: 13px;
+
+            border-bottom: 1px solid #334155;
+
+            font-size: 13px;
+        }
+
+
+        tr:hover {
+            background: #263449;
+        }
+
+
+        /* =====================================================
+           CONNECTION STATUS COLORS
+        ====================================================== */
+
+        .status-listen {
+            color: #fbbf24;
+        }
+
+
+        .status-established {
+            color: #6ee7b7;
+        }
+
+
+        .status-timewait {
+            color: #94a3b8;
+        }
+
+
+        .status-closewait {
+            color: #fb923c;
+        }
+
+
+        .status-synsent {
+            color: #f87171;
+        }
+
+
+        /* =====================================================
+           MESSAGES
+        ====================================================== */
+
+        .empty {
+            text-align: center;
+
+            padding: 30px;
+
+            color: #94a3b8;
+        }
+
+
+        .error {
+            color: #fca5a5;
+
+            text-align: center;
+
+            padding: 20px;
+        }
+
+
+        .footer-info {
+            color: #64748b;
+
+            font-size: 12px;
+
+            margin-top: 15px;
+        }
+
+
+        .refresh-info {
+            margin-top: 8px;
+
+            color: #64748b;
+
+            font-size: 12px;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ====================================================== */
+
+        @media (max-width: 1000px) {
+
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                display: none;
+            }
+
+
+            .main {
+                padding: 15px;
+            }
+
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+
+            .page-title {
+                display: block;
+            }
+
+
+            .connection-status {
+                display: inline-block;
+
+                margin-top: 10px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header class="header">
+
+
+    <div class="logo">
+
+        <img
+            src="{{ url_for('static', filename='sentinelnet_logo.png') }}"
+            alt="SentinelNet Logo"
+            class="logo-image"
+        >
+
+        <div>
+            SENTINEL<span>NET</span>
+        </div>
+
+    </div>
+
+
+    <div class="connection">
+
+        <div class="status-dot"></div>
+
+        <span>
+            Console Connected
+        </span>
+
+    </div>
+
+
+</header>
+
+
+<!-- =========================================================
+     MAIN LAYOUT
+========================================================= -->
+
+<div class="layout">
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar">
+
+
+        <h3>
+            Navigation
+        </h3>
+
+
+        <a
+            href="/"
+            class="nav-item"
+        >
+            Dashboard
+        </a>
+
+
+        <a
+            href="/history"
+            class="nav-item"
+        >
+            History
+        </a>
+
+
+        <a
+            href="/processes"
+            class="nav-item"
+        >
+            Processes
+        </a>
+
+
+        <a
+            href="/network"
+            class="nav-item active"
+        >
+            Network
+        </a>
+
+
+        <a
+            href="/reports"
+            class="nav-item"
+        >
+            Reports
+        </a>
+
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
+    <main class="main">
+
+
+        <!-- =================================================
+             PAGE TITLE
+        ================================================== -->
+
+        <div class="page-title">
+
+
+            <div>
+
+                <h1>
+                    Network Monitoring
+                </h1>
+
+                <p>
+                    Real-time host network connection monitoring and analysis
+                </p>
+
+            </div>
+
+
+            
+
+
+        </div>
+
+
+        <!-- =================================================
+             NETWORK SUMMARY
+        ================================================== -->
+
+        <div class="summary-grid">
+
+
+            <div class="summary-card">
+
+                <h3>
+                    Total Connections
+                </h3>
+
+                <div
+                    class="summary-value"
+                    id="totalConnections"
+                >
+                    --
+                </div>
+
+                <div class="summary-label">
+                    Latest snapshot
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <h3>
+                    TCP Connections
+                </h3>
+
+                <div
+                    class="summary-value"
+                    id="tcpConnections"
+                >
+                    --
+                </div>
+
+                <div class="summary-label">
+                    TCP protocol
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <h3>
+                    UDP Connections
+                </h3>
+
+                <div
+                    class="summary-value"
+                    id="udpConnections"
+                >
+                    --
+                </div>
+
+                <div class="summary-label">
+                    UDP protocol
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <h3>
+                    Established
+                </h3>
+
+                <div
+                    class="summary-value"
+                    id="establishedConnections"
+                >
+                    --
+                </div>
+
+                <div class="summary-label">
+                    Active TCP sessions
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =================================================
+             NETWORK ANALYSIS
+        ================================================== -->
+
+        <div class="card">
+
+
+            <div class="card-header">
+
+                <h2>
+                    Network Analysis
+                </h2>
+
+                <div
+                    class="count"
+                    id="analysisTimestamp"
+                >
+                    Loading...
+                </div>
+
+            </div>
+
+
+            <div class="summary-grid">
+
+
+                <div class="summary-card">
+
+                    <h3>
+                        Listening
+                    </h3>
+
+                    <div
+                        class="summary-value"
+                        id="listenConnections"
+                    >
+                        --
+                    </div>
+
+                    <div class="summary-label">
+                        Listening services
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <h3>
+                        Established
+                    </h3>
+
+                    <div
+                        class="summary-value"
+                        id="analysisEstablished"
+                    >
+                        --
+                    </div>
+
+                    <div class="summary-label">
+                        Active connections
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <h3>
+                        External
+                    </h3>
+
+                    <div
+                        class="summary-value"
+                        id="externalConnections"
+                    >
+                        --
+                    </div>
+
+                    <div class="summary-label">
+                        External established
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <h3>
+                        SYN Sent
+                    </h3>
+
+                    <div
+                        class="summary-value"
+                        id="synSentConnections"
+                    >
+                        --
+                    </div>
+
+                    <div class="summary-label">
+                        Connection attempts
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             NETWORK RISK ANALYSIS
+        ================================================== -->
+
+        <div class="card">
+
+
+            <div class="card-header">
+
+                <h2>
+                    Network Risk Analysis
+                </h2>
+
+                <div
+                    class="count"
+                    id="riskStatus"
+                >
+                    Loading...
+                </div>
+
+            </div>
+
+
+            <div class="summary-grid">
+
+
+                <div class="summary-card">
+
+                    <h3>
+                        Risk Score
+                    </h3>
+
+                    <div
+                        class="summary-value"
+                        id="riskScore"
+                    >
+                        --
+                    </div>
+
+                    <div class="summary-label">
+                        Network risk score / 100
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <h3>
+                        Risk Status
+                    </h3>
+
+                    <div
+                        class="summary-value"
+                        id="riskLevel"
+                    >
+                        --
+                    </div>
+
+                    <div class="summary-label">
+                        Current network assessment
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <h3>
+                        External Connections
+                    </h3>
+
+                    <div
+                        class="summary-value"
+                        id="riskExternalConnections"
+                    >
+                        --
+                    </div>
+
+                    <div class="summary-label">
+                        External established
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <h3>
+                        SYN Sent
+                    </h3>
+
+                    <div
+                        class="summary-value"
+                        id="riskSynSent"
+                    >
+                        --
+                    </div>
+
+                    <div class="summary-label">
+                        Connection attempts
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <div
+                class="footer-info"
+                id="riskReasons"
+            >
+                Risk reasons: --
+            </div>
+
+
+        </div>
+
+
+        <!-- =================================================
+             NETWORK CONNECTION TABLE
+        ================================================== -->
+
+        <div class="card">
+
+
+            <div class="card-header">
+
+                <h2>
+                    Latest Network Snapshot
+                </h2>
+
+                <div
+                    class="count"
+                    id="connectionCount"
+                >
+                    Loading...
+                </div>
+
+            </div>
+
+
+            <div class="table-container">
+
+
+                <table>
+
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                PID
+                            </th>
+
+                            <th>
+                                Process
+                            </th>
+
+                            <th>
+                                Protocol
+                            </th>
+
+                            <th>
+                                Local Address
+                            </th>
+
+                            <th>
+                                Local Port
+                            </th>
+
+                            <th>
+                                Remote Address
+                            </th>
+
+                            <th>
+                                Remote Port
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="networkTable">
+
+
+                        <tr>
+
+                            <td
+                                colspan="8"
+                                class="empty"
+                            >
+
+                                Loading network connections...
+
+                            </td>
+
+                        </tr>
+
+
+                    </tbody>
+
+
+                </table>
+
+
+            </div>
+
+
+            <div
+                class="footer-info"
+                id="lastUpdated"
+            >
+
+                Last updated: --
+
+            </div>
+
+
+            <div class="refresh-info">
+
+                Network information automatically refreshes every 5 seconds.
+
+            </div>
+
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script>
+
+
+/* =========================================================
+   HTML ESCAPING
+========================================================= */
+
+function escapeHtml(value) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
+        return "";
+
+    }
+
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+/* =========================================================
+   CONNECTION STATUS CLASS
+========================================================= */
+
+function getStatusClass(status) {
+
+    if (!status) {
+
+        return "";
+
+    }
+
+
+    const value =
+        status.toUpperCase();
+
+
+    if (
+        value === "LISTEN"
+    ) {
+
+        return "status-listen";
+
+    }
+
+
+    if (
+        value === "ESTABLISHED"
+    ) {
+
+        return "status-established";
+
+    }
+
+
+    if (
+        value === "TIME_WAIT"
+    ) {
+
+        return "status-timewait";
+
+    }
+
+
+    if (
+        value === "CLOSE_WAIT"
+    ) {
+
+        return "status-closewait";
+
+    }
+
+
+    if (
+        value === "SYN_SENT"
+    ) {
+
+        return "status-synsent";
+
+    }
+
+
+    return "";
+
+}
+
+
+/* =========================================================
+   LOAD NETWORK CONNECTIONS
+========================================================= */
+
+async function loadNetworkData() {
+
+    const table =
+        document.getElementById(
+            "networkTable"
+        );
+
+
+    const count =
+        document.getElementById(
+            "connectionCount"
+        );
+
+
+    const lastUpdated =
+        document.getElementById(
+            "lastUpdated"
+        );
+
+
+    const totalConnections =
+        document.getElementById(
+            "totalConnections"
+        );
+
+
+    const tcpConnections =
+        document.getElementById(
+            "tcpConnections"
+        );
+
+
+    const udpConnections =
+        document.getElementById(
+            "udpConnections"
+        );
+
+
+    const establishedConnections =
+        document.getElementById(
+            "establishedConnections"
+        );
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/network"
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "HTTP error: " +
+                response.status
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        if (!data.success) {
+
+            throw new Error(
+                data.error ||
+                "Network API returned an error."
+            );
+
+        }
+
+
+        const connections =
+            data.network_connections || [];
+
+
+        /* =================================================
+           CALCULATE COUNTS
+        ================================================= */
+
+        const tcpCount =
+            connections.filter(
+                connection =>
+                    connection.protocol === "TCP"
+            ).length;
+
+
+        const udpCount =
+            connections.filter(
+                connection =>
+                    connection.protocol === "UDP"
+            ).length;
+
+
+        const establishedCount =
+            connections.filter(
+                connection =>
+                    connection.status === "ESTABLISHED"
+            ).length;
+
+
+        /* =================================================
+           UPDATE SUMMARY
+        ================================================= */
+
+        totalConnections.textContent =
+            connections.length;
+
+
+        tcpConnections.textContent =
+            tcpCount;
+
+
+        udpConnections.textContent =
+            udpCount;
+
+
+        establishedConnections.textContent =
+            establishedCount;
+
+
+        count.textContent =
+            connections.length +
+            " connections";
+
+
+        /* =================================================
+           UPDATE TABLE
+        ================================================= */
+
+        if (
+            connections.length === 0
+        ) {
+
+            table.innerHTML = `
+
+                <tr>
+
+                    <td
+                        colspan="8"
+                        class="empty"
+                    >
+
+                        No network connections found.
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+
+        else {
+
+            table.innerHTML =
+                connections.map(
+                    connection => {
+
+                        const status =
+                            connection.status ||
+                            "NONE";
+
+
+                        const localAddress =
+                            connection.local_ip ||
+                            "-";
+
+
+                        const localPort =
+                            connection.local_port ??
+                            "-";
+
+
+                        const remoteAddress =
+                            connection.remote_ip ||
+                            "-";
+
+
+                        const remotePort =
+                            connection.remote_port ??
+                            "-";
+
+
+                        return `
+
+                            <tr>
+
+                                <td>
+                                    ${escapeHtml(
+                                        connection.pid
+                                    )}
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+                                        connection.process_name
+                                    )}
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+                                        connection.protocol
+                                    )}
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+                                        localAddress
+                                    )}
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+                                        localPort
+                                    )}
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+                                        remoteAddress
+                                    )}
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+                                        remotePort
+                                    )}
+                                </td>
+
+                                <td
+                                    class="${getStatusClass(status)}"
+                                >
+
+                                    ${escapeHtml(
+                                        status
+                                    )}
+
+                                </td>
+
+                            </tr>
+
+                        `;
+
+                    }
+
+                ).join("");
+
+        }
+
+
+        /* =================================================
+           UPDATE TIMESTAMP
+        ================================================= */
+
+        lastUpdated.textContent =
+            "Last updated: " +
+            (
+                data.timestamp ||
+                "--"
+            );
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "Network data error:",
+            error
+        );
+
+
+        count.textContent =
+            "Error";
+
+
+        totalConnections.textContent =
+            "--";
+
+
+        tcpConnections.textContent =
+            "--";
+
+
+        udpConnections.textContent =
+            "--";
+
+
+        establishedConnections.textContent =
+            "--";
+
+
+        table.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="8"
+                    class="error"
+                >
+
+                    Failed to load network data.
+
+                    <br>
+
+                    ${escapeHtml(
+                        error.message
+                    )}
+
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+}
+
+
+/* =========================================================
+   LOAD NETWORK ANALYSIS
+========================================================= */
+
+async function loadNetworkAnalysis() {
+
+    const listenConnections =
+        document.getElementById(
+            "listenConnections"
+        );
+
+
+    const analysisEstablished =
+        document.getElementById(
+            "analysisEstablished"
+        );
+
+
+    const externalConnections =
+        document.getElementById(
+            "externalConnections"
+        );
+
+
+    const synSentConnections =
+        document.getElementById(
+            "synSentConnections"
+        );
+
+
+    const analysisTimestamp =
+        document.getElementById(
+            "analysisTimestamp"
+        );
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/network/analysis"
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "HTTP error: " +
+                response.status
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        if (!data.success) {
+
+            throw new Error(
+                data.error ||
+                "Network analysis API returned an error."
+            );
+
+        }
+
+
+        const analysis =
+            data.analysis || {};
+
+
+        listenConnections.textContent =
+            analysis.listen ?? "--";
+
+
+        analysisEstablished.textContent =
+            analysis.established ?? "--";
+
+
+        externalConnections.textContent =
+            analysis.external_established ?? "--";
+
+
+        synSentConnections.textContent =
+            analysis.syn_sent ?? "--";
+
+
+        analysisTimestamp.textContent =
+            analysis.timestamp ||
+            "Latest";
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "Network analysis error:",
+            error
+        );
+
+
+        listenConnections.textContent =
+            "--";
+
+
+        analysisEstablished.textContent =
+            "--";
+
+
+        externalConnections.textContent =
+            "--";
+
+
+        synSentConnections.textContent =
+            "--";
+
+
+        analysisTimestamp.textContent =
+            "Error";
+
+    }
+
+}
+
+
+/* =========================================================
+   LOAD NETWORK RISK
+========================================================= */
+
+async function loadNetworkRisk() {
+
+    const riskScore =
+        document.getElementById(
+            "riskScore"
+        );
+
+
+    const riskLevel =
+        document.getElementById(
+            "riskLevel"
+        );
+
+
+    const riskStatus =
+        document.getElementById(
+            "riskStatus"
+        );
+
+
+    const riskExternalConnections =
+        document.getElementById(
+            "riskExternalConnections"
+        );
+
+
+    const riskSynSent =
+        document.getElementById(
+            "riskSynSent"
+        );
+
+
+    const riskReasons =
+        document.getElementById(
+            "riskReasons"
+        );
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/network/risk"
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "HTTP error: " +
+                response.status
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        if (!data.success) {
+
+            throw new Error(
+                data.error ||
+                "Network risk API returned an error."
+            );
+
+        }
+
+
+        const risk =
+            data.risk || {};
+
+
+        riskScore.textContent =
+            (
+                risk.score ??
+                "--"
+            ) +
+            "/100";
+
+
+        riskLevel.textContent =
+            risk.status ||
+            "--";
+
+
+        riskStatus.textContent =
+            risk.status ||
+            "Unknown";
+
+
+        riskExternalConnections.textContent =
+            risk.external_established ??
+            "--";
+
+
+        riskSynSent.textContent =
+            risk.syn_sent ??
+            "--";
+
+
+        const reasons =
+            risk.reasons || [];
+
+
+        if (
+            Array.isArray(reasons) &&
+            reasons.length > 0
+        ) {
+
+            riskReasons.textContent =
+                "Risk reasons: " +
+                reasons.join(" ");
+
+        }
+
+        else {
+
+            riskReasons.textContent =
+                "Risk reasons: No significant network indicators detected.";
+
+        }
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "Network risk error:",
+            error
+        );
+
+
+        riskScore.textContent =
+            "--";
+
+
+        riskLevel.textContent =
+            "--";
+
+
+        riskStatus.textContent =
+            "Error";
+
+
+        riskExternalConnections.textContent =
+            "--";
+
+
+        riskSynSent.textContent =
+            "--";
+
+
+        riskReasons.textContent =
+            "Risk reasons: Unable to load network risk analysis.";
+
+    }
+
+}
+
+
+/* =========================================================
+   LOAD EVERYTHING
+========================================================= */
+
+async function loadAllNetworkInformation() {
+
+    await Promise.all([
+
+        loadNetworkData(),
+
+        loadNetworkAnalysis(),
+
+        loadNetworkRisk()
+
+    ]);
+
+}
+
+
+/* =========================================================
+   INITIAL LOAD
+========================================================= */
+
+loadAllNetworkInformation();
+
+
+/* =========================================================
+   REFRESH EVERYTHING EVERY 5 SECONDS
+========================================================= */
+
+setInterval(
+    loadAllNetworkInformation,
+    5000
+);
+
+
+</script>
+
+
+</body>
+
+</html>

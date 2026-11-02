@@ -1,0 +1,2207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>SentinelNet - Processes</title>
+
+
+    <style>
+
+        /* =====================================================
+           GLOBAL
+        ====================================================== */
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #0f172a;
+
+            color: #e2e8f0;
+        }
+
+
+        /* =====================================================
+           HEADER
+        ====================================================== */
+
+        .header {
+
+            height: 70px;
+
+            background: #111827;
+
+            border-bottom:
+                1px solid #334155;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 0 30px;
+        }
+
+
+        .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.logo-image {
+    width: 46px;
+    height: 46px;
+
+    object-fit: contain;
+
+    border-radius: 8px;
+}
+
+.logo span {
+    color: #38bdf8;
+}
+
+
+        .connection {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            font-size: 14px;
+        }
+
+
+        .status-dot {
+
+            width: 10px;
+
+            height: 10px;
+
+            border-radius: 50%;
+
+            background: #22c55e;
+        }
+
+
+        /* =====================================================
+           PAGE LAYOUT
+        ====================================================== */
+
+        .layout {
+
+            display: flex;
+
+            min-height:
+                calc(100vh - 70px);
+        }
+
+
+        /* =====================================================
+           SIDEBAR
+        ====================================================== */
+
+        .sidebar {
+
+            width: 220px;
+
+            background: #111827;
+
+            border-right:
+                1px solid #334155;
+
+            padding: 25px 15px;
+        }
+
+
+        .sidebar h3 {
+
+            font-size: 12px;
+
+            color: #64748b;
+
+            text-transform: uppercase;
+
+            margin:
+                0 10px 15px;
+
+            letter-spacing: 1px;
+        }
+
+
+        .nav-item {
+
+            display: block;
+
+            padding: 13px 15px;
+
+            margin-bottom: 5px;
+
+            border-radius: 7px;
+
+            color: #cbd5e1;
+
+            text-decoration: none;
+        }
+
+
+        .nav-item:hover,
+        .nav-item.active {
+
+            background: #1e293b;
+
+            color: #38bdf8;
+        }
+
+
+        /* =====================================================
+           MAIN CONTENT
+        ====================================================== */
+
+        .main {
+
+            flex: 1;
+
+            padding: 30px;
+
+            overflow-y: auto;
+        }
+
+
+        .page-title {
+
+            margin-bottom: 25px;
+        }
+
+
+        .page-title h1 {
+
+            margin:
+                0 0 6px;
+
+            font-size: 28px;
+        }
+
+
+        .page-title p {
+
+            margin: 0;
+
+            color: #94a3b8;
+        }
+
+
+        /* =====================================================
+           SUMMARY CARDS
+        ====================================================== */
+
+        .summary-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 15px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .summary-card {
+
+            background: #111827;
+
+            border:
+                1px solid #1e293b;
+
+            border-radius: 10px;
+
+            padding: 20px;
+
+            box-shadow:
+                0 4px 15px
+                rgba(0, 0, 0, 0.20);
+        }
+
+
+        .summary-card h3 {
+
+            margin:
+                0 0 8px;
+
+            font-size: 13px;
+
+            color: #94a3b8;
+
+            font-weight: normal;
+        }
+
+
+        .summary-value {
+
+            font-size: 28px;
+
+            font-weight: bold;
+
+            color: #e2e8f0;
+        }
+
+
+        .summary-label {
+
+            margin-top: 5px;
+
+            font-size: 12px;
+
+            color: #64748b;
+        }
+
+
+        .value-normal {
+
+            color: #22c55e;
+        }
+
+
+        .value-warning {
+
+            color: #f59e0b;
+        }
+
+
+        .value-danger {
+
+            color: #ef4444;
+        }
+
+
+        /* =====================================================
+           PANEL
+        ====================================================== */
+
+        .panel {
+
+            background: #1e293b;
+
+            border:
+                1px solid #334155;
+
+            border-radius: 10px;
+
+            padding: 20px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .panel-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 20px;
+        }
+
+
+        .panel-header h2 {
+
+            margin: 0;
+
+            font-size: 18px;
+        }
+
+
+        .record-count {
+
+            color: #94a3b8;
+
+            font-size: 13px;
+        }
+
+
+        /* =====================================================
+           PROCESS ANALYSIS
+        ====================================================== */
+
+        .analysis-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 15px;
+        }
+
+
+        .analysis-card {
+
+            background: #111827;
+
+            border-radius: 9px;
+
+            padding: 18px;
+        }
+
+
+        .analysis-card h3 {
+
+            margin:
+                0 0 8px;
+
+            font-size: 13px;
+
+            color: #94a3b8;
+
+            font-weight: normal;
+        }
+
+
+        .analysis-value {
+
+            font-size: 25px;
+
+            font-weight: bold;
+
+            color: #e2e8f0;
+        }
+
+
+        .analysis-description {
+
+            margin-top: 5px;
+
+            font-size: 12px;
+
+            color: #64748b;
+        }
+
+
+        .analysis-message {
+
+            margin-top: 18px;
+
+            padding: 13px 15px;
+
+            border-radius: 7px;
+
+            background: #0f172a;
+
+            border:
+                1px solid #334155;
+
+            color: #cbd5e1;
+
+            font-size: 13px;
+        }
+
+
+        /* =====================================================
+           TABLE
+        ====================================================== */
+
+        .table-container {
+
+            overflow-x: auto;
+        }
+
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 900px;
+        }
+
+
+        th {
+
+            text-align: left;
+
+            padding: 13px;
+
+            background: #0f172a;
+
+            color: #94a3b8;
+
+            font-size: 12px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.5px;
+
+            border-bottom:
+                1px solid #334155;
+        }
+
+
+        td {
+
+            padding: 13px;
+
+            border-bottom:
+                1px solid #334155;
+
+            font-size: 13px;
+        }
+
+
+        tr:hover {
+
+            background: #263449;
+        }
+
+
+        /* =====================================================
+           CPU / MEMORY COLORS
+        ====================================================== */
+
+        .cpu-normal,
+        .memory-normal {
+
+            color: #22c55e;
+        }
+
+
+        .cpu-warning,
+        .memory-warning {
+
+            color: #f59e0b;
+        }
+
+
+        .cpu-danger,
+        .memory-danger {
+
+            color: #ef4444;
+        }
+
+
+        /* =====================================================
+           PROCESS STATUS
+        ====================================================== */
+
+        .status {
+
+            display: inline-block;
+
+            padding: 4px 8px;
+
+            border-radius: 5px;
+
+            font-size: 11px;
+
+            font-weight: bold;
+        }
+
+
+        .status-running {
+
+            background: #14532d;
+
+            color: #86efac;
+        }
+
+
+        .status-other {
+
+            background: #334155;
+
+            color: #cbd5e1;
+        }
+
+
+        /* =====================================================
+           HIGH ACTIVITY BADGES
+        ====================================================== */
+
+        .activity-badge {
+
+            display: inline-block;
+
+            padding: 4px 8px;
+
+            border-radius: 5px;
+
+            font-size: 10px;
+
+            font-weight: bold;
+
+            margin-left: 5px;
+        }
+
+
+        .activity-normal {
+
+            background: #14532d;
+
+            color: #86efac;
+        }
+
+
+        .activity-warning {
+
+            background: #78350f;
+
+            color: #fcd34d;
+        }
+
+
+        .activity-danger {
+
+            background: #7f1d1d;
+
+            color: #fca5a5;
+        }
+
+
+        /* =====================================================
+           LOADING
+        ====================================================== */
+
+        .loading {
+
+            color: #94a3b8;
+
+            text-align: center;
+
+            padding: 30px;
+        }
+
+
+        /* =====================================================
+           ERROR
+        ====================================================== */
+
+        .error {
+
+            color: #fca5a5;
+
+            background: #450a0a;
+
+            border:
+                1px solid #7f1d1d;
+
+            padding: 15px;
+
+            border-radius: 8px;
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ====================================================== */
+
+        .footer-info {
+
+            margin-top: 15px;
+
+            color: #64748b;
+
+            font-size: 12px;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ====================================================== */
+
+        @media (max-width: 1100px) {
+
+            .summary-grid {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+
+            .analysis-grid {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+
+                display: none;
+            }
+
+
+            .main {
+
+                padding: 15px;
+            }
+
+
+            .summary-grid {
+
+                grid-template-columns: 1fr;
+            }
+
+
+            .analysis-grid {
+
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header class="header">
+
+    <div class="logo">
+
+        <img
+            src="{{ url_for('static', filename='sentinelnet_logo.png') }}"
+            alt="SentinelNet Logo"
+            class="logo-image"
+        >
+
+        <div class="logo-text">
+            SENTINEL<span>NET</span>
+        </div>
+
+    </div>
+
+
+    <div class="connection">
+
+        <div class="status-dot"></div>
+
+        <span>
+            Console Connected
+        </span>
+
+    </div>
+
+</header>
+
+
+<!-- =========================================================
+     MAIN LAYOUT
+========================================================= -->
+
+<div class="layout">
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar">
+
+        <h3>
+            Navigation
+        </h3>
+
+
+        <a
+            href="/"
+            class="nav-item"
+        >
+            Dashboard
+        </a>
+
+
+        <a
+            href="/history"
+            class="nav-item"
+        >
+            History
+        </a>
+
+
+        <a
+            href="/processes"
+            class="nav-item active"
+        >
+            Processes
+        </a>
+
+
+        <a
+            href="/network"
+            class="nav-item"
+        >
+            Network
+        </a>
+
+
+        <a
+            href="/reports"
+            class="nav-item"
+        >
+            Reports
+        </a>
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
+    <main class="main">
+
+
+        <!-- =================================================
+             PAGE TITLE
+        ================================================== -->
+
+        <div class="page-title">
+
+            <h1>
+                Process Monitor
+            </h1>
+
+            <p>
+                Real-time processes collected by the SentinelNet Monitoring Agent
+            </p>
+
+        </div>
+
+
+        <!-- =================================================
+             PROCESS SUMMARY
+        ================================================== -->
+
+        <div class="summary-grid">
+
+
+            <div class="summary-card">
+
+                <h3>
+                    Total Processes
+                </h3>
+
+                <div
+                    class="summary-value"
+                    id="totalProcesses"
+                >
+                    --
+                </div>
+
+                <div class="summary-label">
+                    Latest process snapshot
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <h3>
+                    Running Processes
+                </h3>
+
+                <div
+                    class="summary-value value-normal"
+                    id="runningProcesses"
+                >
+                    --
+                </div>
+
+                <div class="summary-label">
+                    Currently running
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <h3>
+                    High CPU Processes
+                </h3>
+
+                <div
+                    class="summary-value"
+                    id="highCpuProcesses"
+                >
+                    --
+                </div>
+
+                <div class="summary-label">
+                    CPU usage ≥ 50%
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <h3>
+                    High Memory Processes
+                </h3>
+
+                <div
+                    class="summary-value"
+                    id="highMemoryProcesses"
+                >
+                    --
+                </div>
+
+                <div class="summary-label">
+                    Memory usage ≥ 50%
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =================================================
+             PROCESS ANALYSIS
+        ================================================== -->
+
+        <div class="panel">
+
+            <div class="panel-header">
+
+                <h2>
+                    Process Analysis
+                </h2>
+
+                <div
+                    class="record-count"
+                    id="analysisTimestamp"
+                >
+                    Loading...
+                </div>
+
+            </div>
+
+
+            <div class="analysis-grid">
+
+
+                <!-- =========================================
+                     CPU
+                ========================================== -->
+
+                <div class="analysis-card">
+
+                    <h3>
+                        Highest CPU Usage
+                    </h3>
+
+                    <div
+                        class="analysis-value"
+                        id="highestCpu"
+                    >
+                        --
+                    </div>
+
+                    <div
+                        class="analysis-description"
+                        id="highestCpuProcess"
+                    >
+                        No data
+                    </div>
+
+                </div>
+
+
+                <!-- =========================================
+                     MEMORY
+                ========================================== -->
+
+                <div class="analysis-card">
+
+                    <h3>
+                        Highest Memory Usage
+                    </h3>
+
+                    <div
+                        class="analysis-value"
+                        id="highestMemory"
+                    >
+                        --
+                    </div>
+
+                    <div
+                        class="analysis-description"
+                        id="highestMemoryProcess"
+                    >
+                        No data
+                    </div>
+
+                </div>
+
+
+                <!-- =========================================
+                     NON-RUNNING
+                ========================================== -->
+
+                <div class="analysis-card">
+
+                    <h3>
+                        Non-Running Processes
+                    </h3>
+
+                    <div
+                        class="analysis-value"
+                        id="nonRunningProcesses"
+                    >
+                        --
+                    </div>
+
+                    <div class="analysis-description">
+                        Processes not currently running
+                    </div>
+
+                </div>
+
+
+                <!-- =========================================
+                     ACTIVITY STATUS
+                ========================================== -->
+
+                <div class="analysis-card">
+
+                    <h3>
+                        Activity Status
+                    </h3>
+
+                    <div
+                        class="analysis-value value-normal"
+                        id="activityStatus"
+                    >
+                        --
+                    </div>
+
+                    <div class="analysis-description">
+                        Based on current resource indicators
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <div
+                class="analysis-message"
+                id="analysisMessage"
+            >
+                Analyzing current process activity...
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             PROCESS TABLE
+        ================================================== -->
+
+        <div class="panel">
+
+            <div class="panel-header">
+
+                <h2>
+                    Latest Process Snapshot
+                </h2>
+
+                <div
+                    id="recordCount"
+                    class="record-count"
+                >
+                    Loading...
+                </div>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                PID
+                            </th>
+
+                            <th>
+                                Process
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                CPU
+                            </th>
+
+                            <th>
+                                Memory
+                            </th>
+
+                            <th>
+                                Username
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="processTable">
+
+                        <tr>
+
+                            <td
+                                colspan="6"
+                                class="loading"
+                            >
+                                Loading processes...
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <div
+                class="footer-info"
+                id="lastUpdated"
+            >
+                Last updated: --
+            </div>
+
+        </div>
+
+
+    </main>
+
+</div>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script>
+
+
+/* =========================================================
+   HTML ESCAPING
+========================================================= */
+
+function escapeHtml(value) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
+        return "";
+
+    }
+
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+/* =========================================================
+   CPU CLASS
+========================================================= */
+
+function getCpuClass(cpu) {
+
+    if (cpu >= 75) {
+
+        return "cpu-danger";
+
+    }
+
+
+    if (cpu >= 50) {
+
+        return "cpu-warning";
+
+    }
+
+
+    return "cpu-normal";
+
+}
+
+
+/* =========================================================
+   MEMORY CLASS
+========================================================= */
+
+function getMemoryClass(memory) {
+
+    if (memory >= 75) {
+
+        return "memory-danger";
+
+    }
+
+
+    if (memory >= 50) {
+
+        return "memory-warning";
+
+    }
+
+
+    return "memory-normal";
+
+}
+
+
+/* =========================================================
+   STATUS CLASS
+========================================================= */
+
+function getStatusClass(status) {
+
+    if (!status) {
+
+        return "status-other";
+
+    }
+
+
+    if (
+        status.toLowerCase() ===
+        "running"
+    ) {
+
+        return "status-running";
+
+    }
+
+
+    return "status-other";
+
+}
+
+
+/* =========================================================
+   ACTIVITY BADGE
+========================================================= */
+
+function getActivityBadge(cpu, memory) {
+
+    if (
+        cpu >= 75 ||
+        memory >= 75
+    ) {
+
+        return `
+            <span class="activity-badge activity-danger">
+                HIGH
+            </span>
+        `;
+
+    }
+
+
+    if (
+        cpu >= 50 ||
+        memory >= 50
+    ) {
+
+        return `
+            <span class="activity-badge activity-warning">
+                ELEVATED
+            </span>
+        `;
+
+    }
+
+
+    return `
+        <span class="activity-badge activity-normal">
+            NORMAL
+        </span>
+    `;
+
+}
+
+
+/* =========================================================
+   LOAD PROCESSES
+========================================================= */
+
+async function loadProcesses() {
+
+    try {
+
+
+        /* ================================================
+           REQUEST API
+        ================================================= */
+
+        const response =
+            await fetch(
+                "/api/processes"
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "HTTP " +
+                response.status
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            data.success === false
+        ) {
+
+            throw new Error(
+                data.error ||
+                "Process API returned an error."
+            );
+
+        }
+
+
+        const processes =
+            Array.isArray(
+                data.processes
+            )
+                ? data.processes
+                : [];
+
+
+        /* ================================================
+           GET ELEMENTS
+        ================================================= */
+
+        const table =
+            document.getElementById(
+                "processTable"
+            );
+
+
+        const recordCount =
+            document.getElementById(
+                "recordCount"
+            );
+
+
+        const totalProcesses =
+            document.getElementById(
+                "totalProcesses"
+            );
+
+
+        const runningProcesses =
+            document.getElementById(
+                "runningProcesses"
+            );
+
+
+        const highCpuProcesses =
+            document.getElementById(
+                "highCpuProcesses"
+            );
+
+
+        const highMemoryProcesses =
+            document.getElementById(
+                "highMemoryProcesses"
+            );
+
+
+        const highestCpu =
+            document.getElementById(
+                "highestCpu"
+            );
+
+
+        const highestCpuProcess =
+            document.getElementById(
+                "highestCpuProcess"
+            );
+
+
+        const highestMemory =
+            document.getElementById(
+                "highestMemory"
+            );
+
+
+        const highestMemoryProcess =
+            document.getElementById(
+                "highestMemoryProcess"
+            );
+
+
+        const nonRunningProcesses =
+            document.getElementById(
+                "nonRunningProcesses"
+            );
+
+
+        const activityStatus =
+            document.getElementById(
+                "activityStatus"
+            );
+
+
+        const analysisMessage =
+            document.getElementById(
+                "analysisMessage"
+            );
+
+
+        const analysisTimestamp =
+            document.getElementById(
+                "analysisTimestamp"
+            );
+
+
+        const lastUpdated =
+            document.getElementById(
+                "lastUpdated"
+            );
+
+
+        /* ================================================
+           EMPTY DATA
+        ================================================= */
+
+        if (
+            processes.length === 0
+        ) {
+
+            totalProcesses.textContent =
+                "0";
+
+            runningProcesses.textContent =
+                "0";
+
+            highCpuProcesses.textContent =
+                "0";
+
+            highMemoryProcesses.textContent =
+                "0";
+
+            highestCpu.textContent =
+                "--";
+
+            highestCpuProcess.textContent =
+                "No process data available.";
+
+            highestMemory.textContent =
+                "--";
+
+            highestMemoryProcess.textContent =
+                "No process data available.";
+
+            nonRunningProcesses.textContent =
+                "0";
+
+            activityStatus.textContent =
+                "Unknown";
+
+            activityStatus.className =
+                "analysis-value";
+
+            analysisMessage.textContent =
+                "No process monitoring data is currently available.";
+
+            analysisTimestamp.textContent =
+                "No data";
+
+            recordCount.textContent =
+                "0 processes";
+
+
+            table.innerHTML = `
+                <tr>
+
+                    <td
+                        colspan="6"
+                        class="loading"
+                    >
+                        No process data available.
+                    </td>
+
+                </tr>
+            `;
+
+
+            lastUpdated.textContent =
+                "Last updated: --";
+
+
+            return;
+
+        }
+
+
+        /* ================================================
+           CALCULATE PROCESS STATISTICS
+        ================================================= */
+
+        let runningCount = 0;
+
+        let highCpuCount = 0;
+
+        let highMemoryCount = 0;
+
+        let nonRunningCount = 0;
+
+
+        let highestCpuValue = 0;
+
+        let highestCpuProcessName =
+            "--";
+
+
+        let highestMemoryValue = 0;
+
+        let highestMemoryProcessName =
+            "--";
+
+
+        processes.forEach(
+            process => {
+
+
+                const cpu =
+                    Number(
+                        process.cpu_percent || 0
+                    );
+
+
+                const memory =
+                    Number(
+                        process.memory_percent || 0
+                    );
+
+
+                const status =
+                    String(
+                        process.status ||
+                        "unknown"
+                    );
+
+
+                /* =========================================
+                   RUNNING
+                ========================================== */
+
+                if (
+                    status.toLowerCase() ===
+                    "running"
+                ) {
+
+                    runningCount++;
+
+                }
+
+                else {
+
+                    nonRunningCount++;
+
+                }
+
+
+                /* =========================================
+                   HIGH CPU
+                ========================================== */
+
+                if (
+                    cpu >= 50
+                ) {
+
+                    highCpuCount++;
+
+                }
+
+
+                /* =========================================
+                   HIGH MEMORY
+                ========================================== */
+
+                if (
+                    memory >= 50
+                ) {
+
+                    highMemoryCount++;
+
+                }
+
+
+                /* =========================================
+                   HIGHEST CPU
+                ========================================== */
+
+                if (
+                    cpu >
+                    highestCpuValue
+                ) {
+
+                    highestCpuValue =
+                        cpu;
+
+                    highestCpuProcessName =
+                        process.process_name ||
+                        "--";
+
+                }
+
+
+                /* =========================================
+                   HIGHEST MEMORY
+                ========================================== */
+
+                if (
+                    memory >
+                    highestMemoryValue
+                ) {
+
+                    highestMemoryValue =
+                        memory;
+
+                    highestMemoryProcessName =
+                        process.process_name ||
+                        "--";
+
+                }
+
+            }
+        );
+
+
+        /* ================================================
+           UPDATE SUMMARY CARDS
+        ================================================= */
+
+        totalProcesses.textContent =
+            processes.length;
+
+
+        runningProcesses.textContent =
+            runningCount;
+
+
+        highCpuProcesses.textContent =
+            highCpuCount;
+
+
+        highMemoryProcesses.textContent =
+            highMemoryCount;
+
+
+        /* ================================================
+           COLOR HIGH CPU CARD
+        ================================================= */
+
+        highCpuProcesses.className =
+            "summary-value";
+
+
+        if (
+            highCpuCount >= 3
+        ) {
+
+            highCpuProcesses.classList.add(
+                "value-danger"
+            );
+
+        }
+
+        else if (
+            highCpuCount >= 1
+        ) {
+
+            highCpuProcesses.classList.add(
+                "value-warning"
+            );
+
+        }
+
+        else {
+
+            highCpuProcesses.classList.add(
+                "value-normal"
+            );
+
+        }
+
+
+        /* ================================================
+           COLOR HIGH MEMORY CARD
+        ================================================= */
+
+        highMemoryProcesses.className =
+            "summary-value";
+
+
+        if (
+            highMemoryCount >= 3
+        ) {
+
+            highMemoryProcesses.classList.add(
+                "value-danger"
+            );
+
+        }
+
+        else if (
+            highMemoryCount >= 1
+        ) {
+
+            highMemoryProcesses.classList.add(
+                "value-warning"
+            );
+
+        }
+
+        else {
+
+            highMemoryProcesses.classList.add(
+                "value-normal"
+            );
+
+        }
+
+
+        /* ================================================
+           UPDATE HIGHEST CPU
+        ================================================= */
+
+        highestCpu.textContent =
+            highestCpuValue.toFixed(2) +
+            "%";
+
+
+        highestCpuProcess.textContent =
+            highestCpuProcessName;
+
+
+        highestCpu.className =
+            "analysis-value " +
+            (
+                highestCpuValue >= 75
+                    ? "value-danger"
+                    : highestCpuValue >= 50
+                        ? "value-warning"
+                        : "value-normal"
+            );
+
+
+        /* ================================================
+           UPDATE HIGHEST MEMORY
+        ================================================= */
+
+        highestMemory.textContent =
+            highestMemoryValue.toFixed(2) +
+            "%";
+
+
+        highestMemoryProcess.textContent =
+            highestMemoryProcessName;
+
+
+        highestMemory.className =
+            "analysis-value " +
+            (
+                highestMemoryValue >= 75
+                    ? "value-danger"
+                    : highestMemoryValue >= 50
+                        ? "value-warning"
+                        : "value-normal"
+            );
+
+
+        /* ================================================
+           NON-RUNNING
+        ================================================= */
+
+        nonRunningProcesses.textContent =
+            nonRunningCount;
+
+
+        /* ================================================
+           PROCESS ACTIVITY ASSESSMENT
+        ================================================= */
+
+        let activityText =
+            "Normal";
+
+
+        let activityClass =
+            "value-normal";
+
+
+        let activityMessage =
+            "No significant process resource indicators detected.";
+
+
+        if (
+            highCpuCount >= 3 ||
+            highMemoryCount >= 3 ||
+            highestCpuValue >= 90 ||
+            highestMemoryValue >= 90
+        ) {
+
+            activityText =
+                "Elevated";
+
+
+            activityClass =
+                "value-danger";
+
+
+            activityMessage =
+                "Multiple processes show elevated resource utilization. Further monitoring is recommended.";
+
+        }
+
+        else if (
+            highCpuCount >= 1 ||
+            highMemoryCount >= 1 ||
+            highestCpuValue >= 75 ||
+            highestMemoryValue >= 75
+        ) {
+
+            activityText =
+                "Elevated";
+
+
+            activityClass =
+                "value-warning";
+
+
+            activityMessage =
+                "One or more processes show elevated resource utilization.";
+
+        }
+
+
+        activityStatus.textContent =
+            activityText;
+
+
+        activityStatus.className =
+            "analysis-value " +
+            activityClass;
+
+
+        analysisMessage.textContent =
+            activityMessage;
+
+
+        /* ================================================
+           TIMESTAMP
+        ================================================= */
+
+        analysisTimestamp.textContent =
+            data.timestamp ||
+            "Latest snapshot";
+
+
+        lastUpdated.textContent =
+            "Last updated: " +
+            (
+                data.timestamp ||
+                "--"
+            );
+
+
+        /* ================================================
+           RECORD COUNT
+        ================================================= */
+
+        recordCount.textContent =
+            processes.length +
+            " processes";
+
+
+        /* ================================================
+           BUILD TABLE
+        ================================================= */
+
+        table.innerHTML =
+            "";
+
+
+        processes.forEach(
+            process => {
+
+
+                const cpu =
+                    Number(
+                        process.cpu_percent || 0
+                    );
+
+
+                const memory =
+                    Number(
+                        process.memory_percent || 0
+                    );
+
+
+                const status =
+                    process.status ||
+                    "unknown";
+
+
+                const processName =
+                    process.process_name ||
+                    "--";
+
+
+                const username =
+                    process.username ||
+                    "--";
+
+
+                const cpuClass =
+                    getCpuClass(
+                        cpu
+                    );
+
+
+                const memoryClass =
+                    getMemoryClass(
+                        memory
+                    );
+
+
+                const statusClass =
+                    getStatusClass(
+                        status
+                    );
+
+
+                const activityBadge =
+                    getActivityBadge(
+                        cpu,
+                        memory
+                    );
+
+
+                const row =
+                    document.createElement(
+                        "tr"
+                    );
+
+
+                row.innerHTML = `
+
+                    <td>
+                        ${escapeHtml(
+                            process.pid
+                        )}
+                    </td>
+
+
+                    <td>
+
+                        ${escapeHtml(
+                            processName
+                        )}
+
+                        ${activityBadge}
+
+                    </td>
+
+
+                    <td>
+
+                        <span
+                            class="status ${statusClass}"
+                        >
+
+                            ${escapeHtml(
+                                status
+                            )}
+
+                        </span>
+
+                    </td>
+
+
+                    <td
+                        class="${cpuClass}"
+                    >
+
+                        ${cpu.toFixed(2)}%
+
+                    </td>
+
+
+                    <td
+                        class="${memoryClass}"
+                    >
+
+                        ${memory.toFixed(2)}%
+
+                    </td>
+
+
+                    <td>
+
+                        ${escapeHtml(
+                            username
+                        )}
+
+                    </td>
+
+                `;
+
+
+                table.appendChild(
+                    row
+                );
+
+            }
+        );
+
+
+    }
+
+    catch (error) {
+
+
+        console.error(
+            "Process loading error:",
+            error
+        );
+
+
+        document.getElementById(
+            "recordCount"
+        ).textContent =
+            "Error";
+
+
+        document.getElementById(
+            "totalProcesses"
+        ).textContent =
+            "--";
+
+
+        document.getElementById(
+            "runningProcesses"
+        ).textContent =
+            "--";
+
+
+        document.getElementById(
+            "highCpuProcesses"
+        ).textContent =
+            "--";
+
+
+        document.getElementById(
+            "highMemoryProcesses"
+        ).textContent =
+            "--";
+
+
+        document.getElementById(
+            "highestCpu"
+        ).textContent =
+            "--";
+
+
+        document.getElementById(
+            "highestCpuProcess"
+        ).textContent =
+            "Unable to load data.";
+
+
+        document.getElementById(
+            "highestMemory"
+        ).textContent =
+            "--";
+
+
+        document.getElementById(
+            "highestMemoryProcess"
+        ).textContent =
+            "Unable to load data.";
+
+
+        document.getElementById(
+            "nonRunningProcesses"
+        ).textContent =
+            "--";
+
+
+        document.getElementById(
+            "activityStatus"
+        ).textContent =
+            "Error";
+
+
+        document.getElementById(
+            "activityStatus"
+        ).className =
+            "analysis-value value-danger";
+
+
+        document.getElementById(
+            "analysisMessage"
+        ).textContent =
+            "Unable to analyze process activity.";
+
+
+        document.getElementById(
+            "analysisTimestamp"
+        ).textContent =
+            "Error";
+
+
+        document.getElementById(
+            "lastUpdated"
+        ).textContent =
+            "Last updated: --";
+
+
+        document.getElementById(
+            "processTable"
+        ).innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="6"
+                    class="error"
+                >
+
+                    Unable to load process information.
+
+                    <br><br>
+
+                    ${escapeHtml(
+                        error.message
+                    )}
+
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+}
+
+
+/* =========================================================
+   INITIAL LOAD
+========================================================= */
+
+loadProcesses();
+
+
+/* =========================================================
+   REFRESH EVERY 5 SECONDS
+========================================================= */
+
+setInterval(
+    loadProcesses,
+    5000
+);
+
+
+</script>
+
+
+</body>
+
+</html>

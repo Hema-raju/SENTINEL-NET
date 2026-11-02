@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>SentinelNet - Security Report</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #0b1220;
+            color: #e5e7eb;
+        }
+
+
+        /* =====================================================
+           TOP HEADER
+        ====================================================== */
+
+        .top-header {
+            position: fixed;
+
+            top: 0;
+            left: 0;
+
+            width: 100%;
+            height: 52px;
+
+            background: #111827;
+
+            border-bottom: 1px solid #334155;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 0 18px 0 20px;
+
+            z-index: 1000;
+        }
+
+
+        .brand {
+            display: flex;
+
+            align-items: center;
+
+            gap: 9px;
+        }
+
+
+        .brand-logo {
+            width: 36px;
+            height: 36px;
+
+            object-fit: contain;
+
+            border-radius: 7px;
+        }
+
+
+        .brand-name {
+            font-size: 18px;
+
+            font-weight: bold;
+
+            letter-spacing: 0.5px;
+
+            color: #e5e7eb;
+        }
+
+
+        .brand-name span {
+            color: #38bdf8;
+        }
+
+
+        .header-connection {
+            display: flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            color: #e5e7eb;
+
+            font-size: 12px;
+        }
+
+
+        .header-status-dot {
+            width: 8px;
+            height: 8px;
+
+            background: #22c55e;
+
+            border-radius: 50%;
+        }
+
+
+        /* =====================================================
+           SIDEBAR
+        ====================================================== */
+
+        .sidebar {
+            position: fixed;
+
+            left: 0;
+            top: 52px;
+
+            width: 162px;
+            height: calc(100vh - 52px);
+
+            background: #111827;
+
+            padding: 18px 10px;
+
+            border-right: 1px solid #334155;
+        }
+
+
+        .navigation-title {
+            color: #64748b;
+
+            font-size: 9px;
+
+            font-weight: bold;
+
+            letter-spacing: 0.8px;
+
+            margin: 2px 7px 12px;
+        }
+
+
+        .nav-item {
+            display: block;
+
+            padding: 9px 10px;
+
+            margin-bottom: 5px;
+
+            border-radius: 6px;
+
+            color: #cbd5e1;
+
+            text-decoration: none;
+
+            font-size: 12px;
+        }
+
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: #1e293b;
+
+            color: #38bdf8;
+        }
+
+
+        /* =====================================================
+           MAIN CONTENT
+        ====================================================== */
+
+        .main {
+            margin-left: 162px;
+
+            padding: 18px;
+
+            padding-top: 70px;
+        }
+
+
+        /* =====================================================
+           PAGE HEADER
+        ====================================================== */
+
+        .page-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 14px;
+        }
+
+
+        .page-title h1 {
+            margin: 0;
+
+            font-size: 21px;
+
+            color: #f1f5f9;
+        }
+
+
+        .page-title p {
+            margin: 4px 0 0;
+
+            color: #94a3b8;
+
+            font-size: 11px;
+        }
+
+
+        .page-actions {
+            display: flex;
+
+            align-items: center;
+
+            gap: 9px;
+        }
+
+
+        .print-button {
+            border: none;
+
+            background: #2563eb;
+
+            color: white;
+
+            padding: 7px 11px;
+
+            border-radius: 6px;
+
+            font-size: 11px;
+
+            cursor: pointer;
+        }
+
+
+        .print-button:hover {
+            background: #1d4ed8;
+        }
+
+
+        /* =====================================================
+           SUMMARY CARDS
+        ====================================================== */
+
+        .summary-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 10px;
+
+            margin-bottom: 10px;
+        }
+
+
+        .summary-card {
+            background: #1e293b;
+
+            border-radius: 7px;
+
+            padding: 12px;
+
+            border: 1px solid #334155;
+        }
+
+
+        .summary-card h3 {
+            margin: 0 0 6px 0;
+
+            color: #94a3b8;
+
+            font-size: 8px;
+
+            font-weight: normal;
+        }
+
+
+        .summary-value {
+            font-size: 16px;
+
+            font-weight: bold;
+
+            color: #e5e7eb;
+        }
+
+
+        .summary-label {
+            margin-top: 3px;
+
+            color: #64748b;
+
+            font-size: 8px;
+        }
+
+
+        /* =====================================================
+           REPORT CARDS
+        ====================================================== */
+
+        .report-card {
+            background: #1e293b;
+
+            border-radius: 7px;
+
+            padding: 12px;
+
+            margin-bottom: 9px;
+
+            border: 1px solid #334155;
+        }
+
+
+        .report-card h2 {
+            margin: 0 0 11px 0;
+
+            font-size: 13px;
+
+            color: #e5e7eb;
+        }
+
+
+        /* =====================================================
+           INFORMATION GRID
+        ====================================================== */
+
+        .info-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            column-gap: 30px;
+
+            row-gap: 8px;
+        }
+
+
+        .info-item {
+            min-height: 31px;
+
+            border-bottom: 1px solid #334155;
+
+            padding: 3px 6px;
+        }
+
+
+        .info-label {
+            display: block;
+
+            color: #64748b;
+
+            font-size: 8px;
+
+            margin-bottom: 4px;
+        }
+
+
+        .info-value {
+            color: #e5e7eb;
+
+            font-size: 9px;
+
+            font-weight: 500;
+        }
+
+
+        .severity {
+            color: #f59e0b;
+
+            font-weight: bold;
+        }
+
+
+        /* =====================================================
+           ALERT
+        ====================================================== */
+
+        .alert-box {
+            background: #0f172a;
+
+            border: 1px solid #334155;
+
+            border-radius: 6px;
+
+            padding: 9px;
+        }
+
+
+        .alert-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 8px;
+        }
+
+
+        .alert-reason {
+            grid-column: 1 / -1;
+
+            margin-top: 3px;
+
+            padding-top: 7px;
+
+            border-top: 1px solid #334155;
+
+            color: #cbd5e1;
+
+            font-size: 9px;
+
+            line-height: 1.4;
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ====================================================== */
+
+        .footer {
+            color: #64748b;
+
+            font-size: 8px;
+
+            line-height: 1.5;
+
+            margin-top: 10px;
+        }
+
+
+        /* =====================================================
+           LOADING / ERROR
+        ====================================================== */
+
+        .loading {
+            text-align: center;
+
+            padding: 30px;
+
+            color: #94a3b8;
+
+            font-size: 12px;
+        }
+
+
+        .error {
+            background: #450a0a;
+
+            border: 1px solid #7f1d1d;
+
+            color: #fca5a5;
+
+            padding: 15px;
+
+            border-radius: 6px;
+
+            font-size: 10px;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ====================================================== */
+
+        @media (max-width: 900px) {
+
+            .summary-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .sidebar {
+                width: 115px;
+            }
+
+            .main {
+                margin-left: 115px;
+
+                padding: 10px;
+
+                padding-top: 65px;
+            }
+
+            .summary-grid,
+            .info-grid,
+            .alert-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .brand-name {
+                font-size: 15px;
+            }
+
+        }
+
+
+        /* =====================================================
+           PRINT
+        ====================================================== */
+
+        @media print {
+
+            .top-header,
+            .sidebar {
+                display: none;
+            }
+
+            .main {
+                margin-left: 0;
+
+                padding: 20px;
+            }
+
+            .print-button,
+            .header-connection {
+                display: none;
+            }
+
+            body {
+                background: white;
+
+                color: black;
+            }
+
+            .report-card,
+            .summary-card {
+                border: 1px solid #cccccc;
+
+                background: white;
+
+                color: black;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     GLOBAL TOP HEADER
+========================================================= -->
+
+<header class="top-header">
+
+    <div class="brand">
+
+        <img
+            src="{{ url_for('static', filename='sentinelnet_logo.png') }}"
+            alt="SentinelNet Logo"
+            class="brand-logo"
+        >
+
+        <div class="brand-name">
+            SENTINEL<span>NET</span>
+        </div>
+
+    </div>
+
+
+    <div class="header-connection">
+
+        <div class="header-status-dot"></div>
+
+        <span>
+            Console Connected
+        </span>
+
+    </div>
+
+</header>
+
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="sidebar">
+
+    <div class="navigation-title">
+        NAVIGATION
+    </div>
+
+
+    <a
+        href="/"
+        class="nav-item"
+    >
+        Dashboard
+    </a>
+
+
+    <a
+        href="/history"
+        class="nav-item"
+    >
+        History
+    </a>
+
+
+    <a
+        href="/processes"
+        class="nav-item"
+    >
+        Processes
+    </a>
+
+
+    <a
+        href="/network"
+        class="nav-item"
+    >
+        Network
+    </a>
+
+
+    <a
+        href="/reports"
+        class="nav-item active"
+    >
+        Reports
+    </a>
+
+</aside>
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="main">
+
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <div class="page-header">
+
+        <div class="page-title">
+
+            <h1>
+                Security Report
+            </h1>
+
+            <p>
+                SentinelNet Host-Based Intrusion Detection and Cyber Defense System
+            </p>
+
+        </div>
+
+
+        <div class="page-actions">
+
+            <button
+                class="print-button"
+                onclick="window.print()"
+            >
+                Print / Save PDF
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         REPORT CONTENT
+    ====================================================== -->
+
+    <div
+        id="reportContent"
+        class="loading"
+    >
+        Loading security report...
+    </div>
+
+
+</main>
+
+
+<script>
+
+
+/* =========================================================
+   HTML ESCAPING
+========================================================= */
+
+function escapeHtml(value) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
+        return "";
+
+    }
+
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+/* =========================================================
+   LOAD SECURITY REPORT
+========================================================= */
+
+async function loadReport() {
+
+    const container =
+        document.getElementById(
+            "reportContent"
+        );
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/status"
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "HTTP " +
+                response.status
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        /* =================================================
+           API DATA
+        ================================================== */
+
+        const agent =
+            data.agent || {};
+
+
+        const metrics =
+            data.metrics || {};
+
+
+        const security =
+            data.security_analysis || {};
+
+
+        const system =
+            data.system_info || {};
+
+
+        const latestAlert =
+            data.latest_alert || null;
+
+
+        /* =================================================
+           BASIC VALUES
+        ================================================== */
+
+        const cpu =
+            Number(
+                metrics.cpu || 0
+            );
+
+
+        const memory =
+            Number(
+                metrics.memory || 0
+            );
+
+
+        const anomalyDetected =
+            security.anomaly_detected === true;
+
+
+        const anomalyScore =
+            security.anomaly_score !== undefined &&
+            security.anomaly_score !== null
+                ? Number(
+                    security.anomaly_score
+                ).toFixed(4)
+                : "--";
+
+
+        const riskScore =
+            security.risk_score !== undefined &&
+            security.risk_score !== null
+                ? security.risk_score
+                : "--";
+
+
+        const severity =
+            security.severity ||
+            "Normal";
+
+
+        const recordsAnalyzed =
+            security.records_analyzed ||
+            0;
+
+
+        const lastUpdate =
+            security.timestamp ||
+            data.timestamp ||
+            "--";
+
+
+        /* =================================================
+           LATEST ALERT
+        ================================================== */
+
+        let alertHtml = "";
+
+
+        if (latestAlert) {
+
+            const alertSeverity =
+                latestAlert.severity ||
+                "Normal";
+
+
+            const alertRisk =
+                latestAlert.risk_score !== undefined
+                    ? latestAlert.risk_score
+                    : "--";
+
+
+            const alertAnomaly =
+                latestAlert.anomaly_detected
+                    ? "Yes"
+                    : "No";
+
+
+            const alertCpu =
+                latestAlert.cpu_usage !== undefined
+                    ? Number(
+                        latestAlert.cpu_usage
+                    ).toFixed(1) + "%"
+                    : "--";
+
+
+            const alertMemory =
+                latestAlert.memory_usage !== undefined
+                    ? Number(
+                        latestAlert.memory_usage
+                    ).toFixed(1) + "%"
+                    : "--";
+
+
+            let reasons = "";
+
+
+            if (
+                Array.isArray(
+                    latestAlert.reasons
+                )
+            ) {
+
+                reasons =
+                    latestAlert.reasons.join(
+                        "; "
+                    );
+
+            }
+
+            else if (
+                latestAlert.message
+            ) {
+
+                reasons =
+                    latestAlert.message;
+
+            }
+
+            else {
+
+                reasons =
+                    "No additional information.";
+
+            }
+
+
+            alertHtml = `
+
+                <div class="report-card">
+
+                    <h2>
+                        Latest Security Alert
+                    </h2>
+
+
+                    <div class="alert-box">
+
+                        <div class="alert-grid">
+
+
+                            <div class="info-item">
+
+                                <span class="info-label">
+                                    Timestamp
+                                </span>
+
+                                <span class="info-value">
+                                    ${escapeHtml(
+                                        latestAlert.timestamp ||
+                                        "--"
+                                    )}
+                                </span>
+
+                            </div>
+
+
+                            <div class="info-item">
+
+                                <span class="info-label">
+                                    Severity
+                                </span>
+
+                                <span class="info-value severity">
+                                    ${escapeHtml(
+                                        alertSeverity
+                                    )}
+                                </span>
+
+                            </div>
+
+
+                            <div class="info-item">
+
+                                <span class="info-label">
+                                    Risk Score
+                                </span>
+
+                                <span class="info-value">
+                                    ${escapeHtml(
+                                        alertRisk
+                                    )}/100
+                                </span>
+
+                            </div>
+
+
+                            <div class="info-item">
+
+                                <span class="info-label">
+                                    Anomaly Detected
+                                </span>
+
+                                <span class="info-value">
+                                    ${alertAnomaly}
+                                </span>
+
+                            </div>
+
+
+                            <div class="info-item">
+
+                                <span class="info-label">
+                                    CPU Usage
+                                </span>
+
+                                <span class="info-value">
+                                    ${alertCpu}
+                                </span>
+
+                            </div>
+
+
+                            <div class="info-item">
+
+                                <span class="info-label">
+                                    Memory Usage
+                                </span>
+
+                                <span class="info-value">
+                                    ${alertMemory}
+                                </span>
+
+                            </div>
+
+
+                            <div class="alert-reason">
+
+                                <span class="info-label">
+                                    Reason
+                                </span>
+
+                                ${escapeHtml(
+                                    reasons
+                                )}
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+
+        else {
+
+            alertHtml = `
+
+                <div class="report-card">
+
+                    <h2>
+                        Latest Security Alert
+                    </h2>
+
+
+                    <div class="alert-box">
+
+                        <div class="info-value">
+
+                            No security alert is currently available.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+
+
+        /* =================================================
+           BUILD REPORT
+        ================================================== */
+
+        container.className = "";
+
+
+        container.innerHTML = `
+
+
+            <!-- =========================================
+                 SUMMARY
+            ========================================== -->
+
+            <div class="summary-grid">
+
+
+                <div class="summary-card">
+
+                    <h3>
+                        CPU Usage
+                    </h3>
+
+                    <div class="summary-value">
+                        ${cpu.toFixed(1)}%
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <h3>
+                        Memory Usage
+                    </h3>
+
+                    <div class="summary-value">
+                        ${memory.toFixed(1)}%
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <h3>
+                        ML Anomaly
+                    </h3>
+
+                    <div class="summary-value">
+
+                        ${
+                            anomalyDetected
+                                ? "Detected"
+                                : "Normal"
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <h3>
+                        Risk Score
+                    </h3>
+
+                    <div class="summary-value">
+                        ${riskScore}/100
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- =========================================
+                 SECURITY ANALYSIS
+            ========================================== -->
+
+            <div class="report-card">
+
+                <h2>
+                    Security Analysis
+                </h2>
+
+
+                <div class="info-grid">
+
+
+                    <div class="info-item">
+
+                        <span class="info-label">
+                            Agent ID
+                        </span>
+
+                        <span class="info-value">
+
+                            ${escapeHtml(
+                                agent.agent_id ||
+                                "--"
+                            )}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <span class="info-label">
+                            Agent Name
+                        </span>
+
+                        <span class="info-value">
+
+                            ${escapeHtml(
+                                agent.agent_name ||
+                                "--"
+                            )}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <span class="info-label">
+                            Anomaly Score
+                        </span>
+
+                        <span class="info-value">
+                            ${anomalyScore}
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <span class="info-label">
+                            Severity
+                        </span>
+
+                        <span class="info-value severity">
+
+                            ${escapeHtml(
+                                severity
+                            )}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <span class="info-label">
+                            Records Analyzed
+                        </span>
+
+                        <span class="info-value">
+                            ${recordsAnalyzed}
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <span class="info-label">
+                            Last Monitoring Update
+                        </span>
+
+                        <span class="info-value">
+
+                            ${escapeHtml(
+                                lastUpdate
+                            )}
+
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================================
+                 MONITORED SYSTEM
+            ========================================== -->
+
+            <div class="report-card">
+
+                <h2>
+                    Monitored System
+                </h2>
+
+
+                <div class="info-grid">
+
+
+                    <div class="info-item">
+
+                        <span class="info-label">
+                            Hostname
+                        </span>
+
+                        <span class="info-value">
+
+                            ${escapeHtml(
+                                system.hostname ||
+                                agent.hostname ||
+                                "--"
+                            )}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <span class="info-label">
+                            Operating System
+                        </span>
+
+                        <span class="info-value">
+
+                            ${escapeHtml(
+                                system.operating_system ||
+                                "--"
+                            )}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <span class="info-label">
+                            OS Release
+                        </span>
+
+                        <span class="info-value">
+
+                            ${escapeHtml(
+                                system.operating_system_release ||
+                                "--"
+                            )}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <span class="info-label">
+                            Processor
+                        </span>
+
+                        <span class="info-value">
+
+                            ${escapeHtml(
+                                system.processor ||
+                                "--"
+                            )}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <span class="info-label">
+                            Logical CPU Cores
+                        </span>
+
+                        <span class="info-value">
+
+                            ${escapeHtml(
+                                system.logical_cpu_count ??
+                                "--"
+                            )}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <span class="info-label">
+                            Physical CPU Cores
+                        </span>
+
+                        <span class="info-value">
+
+                            ${escapeHtml(
+                                system.physical_cpu_count ??
+                                "--"
+                            )}
+
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            ${alertHtml}
+
+
+            <!-- =========================================
+                 FOOTER
+            ========================================== -->
+
+            <div class="footer">
+
+                <div>
+                    SentinelNet Host-Based Intrusion Detection and Cyber Defense System
+                </div>
+
+                <div>
+                    Generated from the current monitoring data available in the SentinelNet Security Console.
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "Report loading error:",
+            error
+        );
+
+
+        container.className =
+            "error";
+
+
+        container.innerHTML = `
+
+            Unable to load the security report.
+
+            <br><br>
+
+            ${escapeHtml(
+                error.message
+            )}
+
+        `;
+
+    }
+
+}
+
+
+/* =========================================================
+   INITIAL LOAD
+========================================================= */
+
+loadReport();
+
+
+/* =========================================================
+   REFRESH EVERY 5 SECONDS
+========================================================= */
+
+setInterval(
+    loadReport,
+    5000
+);
+
+
+</script>
+
+
+</body>
+
+</html>
